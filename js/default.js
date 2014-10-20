@@ -1,4 +1,3 @@
-//FileStart:default.js 
 var camera, scene, renderer;
  var mesh;
  var winWidth = window.innerWidth;
@@ -65,4 +64,3 @@ var camera, scene, renderer;
 	renderer.Leia_render(scene, camera,undefined,undefined,0.4);
  
  }
- //FileEnd
