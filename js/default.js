@@ -40,7 +40,7 @@ var camera, scene, renderer;
  	sphere.position.z = 10;
  	scene.add(sphere);
  
- 	THREE.ImageUtils.crossOrigin = "anonymous";
+ 	//THREE.ImageUtils.crossOrigin = "anonymous";
  	var LEIA_centerPlaneTexture = THREE.ImageUtils.loadTexture("resource/target.png");
  	LEIA_centerPlaneTexture.wrapS = LEIA_centerPlaneTexture.wrapT = THREE.RepeatWrapping;
  	LEIA_centerPlaneTexture.repeat.set(1, 1);
