@@ -8,19 +8,17 @@
  function init() {
  
  	renderer = new LeiaWebGLRenderer({
- 		antialias: true,
- 		renderMode: _renderMode,
- 		camPanelVisible: _camPanelVisible,
- 		gyroPanelVisible: _gyroPanelVisible,
- 		camFov: _camFov, 
- 		devicePixelRatio: 1
+ 		antialias:true, 
+ 		renderMode: _renderMode,  
+		devicePixelRatio: 1 
  	});
  	renderer.Leia_setSize(winWidth, winHeight);
  	document.body.appendChild(renderer.domElement);
  
- 	//
- 	camera = new LeiaCamera(70, winWidth / winHeight, 1, 1000);
- 	camera.position.z = 1000;
+ 	 //setup camera
+ 	camera = new LeiaCamera();
+    camera.position.copy(_camPosition);
+    camera.lookAt(_tarPosition);
  
  	scene = new THREE.Scene();
  
@@ -40,7 +38,6 @@
  	sphere.position.z = 10;
  	scene.add(sphere);
  
- 	//THREE.ImageUtils.crossOrigin = "anonymous";
  	var LEIA_centerPlaneTexture = THREE.ImageUtils.loadTexture("resource/target.png");
  	LEIA_centerPlaneTexture.wrapS = LEIA_centerPlaneTexture.wrapT = THREE.RepeatWrapping;
  	LEIA_centerPlaneTexture.repeat.set(1, 1);
@@ -61,6 +58,6 @@
  	requestAnimationFrame(animate);
  
  	renderer.setClearColor(new THREE.Color().setRGB(1.0, 1.0, 1.0)); 
-	renderer.Leia_render(scene, camera,undefined,undefined,0.4);
+	renderer.Leia_render(scene, camera,undefined,undefined,_holoScreenScale,_camFov,_messageFlag);
  
  }
