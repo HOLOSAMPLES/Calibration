@@ -1,4 +1,4 @@
-var camera, scene, renderer;
+ var camera, scene, renderer;
  var mesh;
  var winWidth = window.innerWidth;
  var winHeight = window.innerHeight;

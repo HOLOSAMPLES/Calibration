@@ -7,11 +7,19 @@
       <meta charset="utf-8">
       <title>holodev</title>
       <script>  
-           var _renderMode = 0; 
-           var _camPanelVisible = true;  
-           var _gyroPanelVisible = false;  
-   		var _camFov = 50; 
+           var _renderMode = 3; 
+		   var _nShaderMode = 0;
+		   var _messageFlag = 0;
+   		   var _camFov = 50.00; 
+           var _camPosition = new THREE.Vector3(0.00,100.00,2.00);
+           var _tarPosition = new THREE.Vector3(-0.46,-2.33,-4.44);
+           var _holoScreenScale = 0.20;
         </script>  
+		<style type="text/css">
+          body {
+              overflow:hidden;
+          }
+        </style>
    </head>
     
     <body>
@@ -22,7 +30,7 @@
     <script>
        var ShiftX = 0;
        var ShiftY = 0;
-      
+       var cookieExpireDate;
       function listener(event){ 
         var msg = JSON.parse(event.data);   
         if(msg.type ==="sensor") {
@@ -36,47 +44,89 @@
       } 
       addEventListener("message", listener, false);
       InitLC();
+      function postShiftMessage(){
+         if(_messageFlag == 0){
+          var message = JSON.stringify({type:'shiftXY', data:{x:ShiftX,y:ShiftY}});
+		  window.top.postMessage(message,"*");
+          
+        }
+      }
       function InitLC()
       {
-        var cookieInfo = document.cookie.split(';');
-   	  for(var i=0; i<cookieInfo.length; i++) {
-   		  var c = cookieInfo[i].trim();
-   		  if (c.indexOf("LEIA_shiftX=") == 0) ShiftX=parseInt(c.substring(12, c.length));
-   		  if (c.indexOf("LEIA_shiftY=") == 0) ShiftY=parseInt(c.substring(12, c.length));
-   	  }
+          var exdate=new Date();
+          exdate.setDate(exdate.getDate() + 10);
+          cookieExpireDate = exdate.toGMTString();
+            var cookieInfo = document.cookie.split(';');
+            for(var i=0; i<cookieInfo.length; i++) {
+                var c = cookieInfo[i].trim();
+                if (c.indexOf("LEIA_shiftX=") == 0) ShiftX=parseInt(c.substring(12, c.length));
+                if (c.indexOf("LEIA_shiftY=") == 0) ShiftY=parseInt(c.substring(12, c.length));
+            }
+        postShiftMessage();
         document.body.style.marginTop = ShiftY + "px";
         document.body.style.marginLeft = ShiftX + "px";
+        console.log(document.body.style.marginTop + " " + document.body.style.marginLeft);
       }
+ 
+      //query shift data from web server
+      if(_messageFlag == 1){
+        setInterval(function() {
+           var xmlhttp = new XMLHttpRequest();
+           xmlhttp.onreadystatechange=function() {
+             if(this.readyState == this.DONE) {
+               if(this.status == 200 && this.response != null ) {
+                 var params =  JSON.parse(this.responseText);
+                   console.log("requested display info:" + this.responseText);
+                    if(params.data != undefined){
+                      ShiftX = params.data.x;
+                      ShiftY = params.data.y;
+                      document.body.style.marginTop = ShiftY + "px";
+                      document.body.style.marginLeft = ShiftX + "px"; 
+                    }
+                 return;
+               }else{
+                 console.log("something wrong");
+               }
+               // something went wrong
+             }
+           };
+           xmlhttp.open("GET","http://127.0.0.1:8887/UpdateShiftParam",true);
+           xmlhttp.send();
+
+         },200);
+      }
+     
        document.onkeydown=function(event)
        {
          if(event && event.keyCode == 73){
-     
             ShiftY =  ShiftY - 1;
-            document.cookie = "LEIA_shiftY="+ ShiftY.toString()+";path=/;";
-    	     document.body.style.marginTop = ShiftY + "px";
+            var str = "LEIA_shiftY="+ ShiftY.toString()+";path=/;" + "session=false;"+ "expires=" + cookieExpireDate + ";";
+            document.cookie = str;
+    	    document.body.style.marginTop = ShiftY + "px";
+            postShiftMessage();
           }
          if(event && event.keyCode == 74){
              ShiftX =  ShiftX - 1;
-             document.cookie = "LEIA_shiftX="+ ShiftX.toString()+";path=/;";
-    	      document.body.style.marginLeft = ShiftX + "px";
+             var str = "LEIA_shiftX="+ ShiftX.toString()+";path=/;" + "session=false;"+ "expires=" + cookieExpireDate + ";";
+             document.cookie = str;
+    	     document.body.style.marginLeft = ShiftX + "px";
+             postShiftMessage();
            }
          if(event && event.keyCode == 75){
             ShiftY =  ShiftY + 1;
-            document.cookie = "LEIA_shiftY="+ ShiftY.toString()+";path=/;";
-    	     document.body.style.marginTop = ShiftY + "px";
-           }
+            var str = "LEIA_shiftY="+ ShiftY.toString()+";path=/;" + "session=false;"+ "expires=" + cookieExpireDate + ";";
+            document.cookie = str;
+    	    document.body.style.marginTop = ShiftY + "px";
+            postShiftMessage();
+          }
          if(event && event.keyCode == 76){
-               ShiftX =  ShiftX + 1;
-             document.cookie = "LEIA_shiftX="+ ShiftX.toString()+";path=/;";
-    	      document.body.style.marginLeft = ShiftX + "px";
-           }
-    
-       }
+            ShiftX =  ShiftX + 1;
+            var str = "LEIA_shiftX="+ ShiftX.toString()+";path=/;" + "session=false;"+ "expires=" + cookieExpireDate + ";";
+            document.cookie = str;
+    	    document.body.style.marginLeft = ShiftX + "px";
+            postShiftMessage();
+        } 
+    }
     </script>
     <script src="js/default.js"></script>
- 
     </html>
-    
-   
-  
- 
