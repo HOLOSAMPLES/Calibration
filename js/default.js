@@ -10,6 +10,7 @@
  	renderer = new LeiaWebGLRenderer({
  		antialias:true, 
  		renderMode: _renderMode,  
+		shaderMode: _nShaderMode,
 		devicePixelRatio: 1 
  	});
  	renderer.Leia_setSize(winWidth, winHeight);
