@@ -34,9 +34,9 @@
  	var ambientLight = new THREE.AmbientLight(0x111111);
  	scene.add(ambientLight);
  
- 	var sphere = new THREE.Mesh(new THREE.SphereGeometry(window.innerWidth * 0.03, 100, 100), new THREE.MeshPhongMaterial({ color: 0xffffff }));
+ 	var sphere = new THREE.Mesh(new THREE.SphereGeometry(2, 100, 100), new THREE.MeshPhongMaterial({ color: 0xffffff }));
  	sphere.overdraw = true;
- 	sphere.position.z = 10;
+ 	sphere.position.z = 5;
  	scene.add(sphere);
  
  	var LEIA_centerPlaneTexture = THREE.ImageUtils.loadTexture("resource/target.png");
@@ -45,7 +45,7 @@
  	var LEIA_centerPlaneMaterial = new THREE.MeshPhongMaterial({ map: LEIA_centerPlaneTexture, transparent: true, side: THREE.DoubleSide });
  	var LEIA_centerPlaneGeometry;
  
- 	LEIA_centerPlaneGeometry = new THREE.PlaneGeometry(window.innerWidth * 0.75, window.innerHeight * 0.75, 10, 10);
+ 	LEIA_centerPlaneGeometry = new THREE.PlaneGeometry(40, 30, 10, 10);
  	LEIA_centerPlane = new THREE.Mesh(LEIA_centerPlaneGeometry, LEIA_centerPlaneMaterial);
  	LEIA_centerPlane.position.x = 0;
  	LEIA_centerPlane.position.y = 0;
